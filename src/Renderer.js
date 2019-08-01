@@ -97,6 +97,18 @@ class Renderer {
 			}
 		}
 
+		function offsetText(y, inline) {
+			let shiftedY = y;
+			if (inline.sup) {
+				// Move the text baseline UP by 3/4 this inline's fontSize
+				shiftedY -= inline.fontSize * 0.75;
+			}
+			if (inline.sub) {
+				shiftedY += inline.fontSize * 0.2;
+			}
+			return shiftedY;
+		}
+
 		if (line._pageNodeRef) {
 			preparePageNodeRefLine(line._pageNodeRef, line.inlines[0]);
 		}
@@ -148,11 +160,7 @@ class Renderer {
 			this.pdfDocument._font = inline.font;
 			this.pdfDocument.fontSize(inline.fontSize);
 
-			let shiftedY = y + shiftToBaseline;
-			if (inline.sup) {
-				// Move the text baseline UP by 3/4 this inline's fontSize
-				shiftedY -= inline.fontSize * 0.75;
-			}
+			let shiftedY = offsetText(y + shiftToBaseline, inline);
 			this.pdfDocument.text(inline.text, x + inline.x, shiftedY, options);
 
 			if (inline.linkToPage) {
