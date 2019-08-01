@@ -147,15 +147,21 @@ class Renderer {
 
 			this.pdfDocument._font = inline.font;
 			this.pdfDocument.fontSize(inline.fontSize);
-			this.pdfDocument.text(inline.text, x + inline.x, y + shiftToBaseline, options);
+
+			let shiftedY = y + shiftToBaseline;
+			if (inline.sup) {
+				// Move the text baseline UP by 3/4 this inline's fontSize
+				shiftedY -= inline.fontSize * 0.75;
+			}
+			this.pdfDocument.text(inline.text, x + inline.x, shiftedY, options);
 
 			if (inline.linkToPage) {
 				this.pdfDocument.ref({ Type: 'Action', S: 'GoTo', D: [inline.linkToPage, 0, 0] }).end();
-				this.pdfDocument.annotate(x + inline.x, y + shiftToBaseline, inline.width, inline.height, { Subtype: 'Link', Dest: [inline.linkToPage - 1, 'XYZ', null, null, null] });
+				this.pdfDocument.annotate(x + inline.x, shiftedY, inline.width, inline.height, { Subtype: 'Link', Dest: [inline.linkToPage - 1, 'XYZ', null, null, null] });
 			}
 
 		}
-
+		// Decorations will not be shifted for superscripted font
 		textDecorator.drawDecorations(line, x, y);
 	}
 

@@ -97,7 +97,8 @@ class StyleContextStack {
 			'characterSpacing',
 			'noWrap',
 			'markerColor',
-			'leadingIndent'
+			'leadingIndent',
+			'sup'
 			//'tableCellPadding'
 			// 'cellBorder',
 			// 'headerCellBorder',
