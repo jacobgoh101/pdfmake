@@ -1,6 +1,5 @@
 import TextDecorator from './TextDecorator';
 import TextInlines from './TextInlines';
-import { isUndefined } from './helpers/variableType';
 
 var getSvgToPDF = function () {
 	try {
@@ -76,7 +75,7 @@ class Renderer {
 			let diffWidth;
 			let textInlines = new TextInlines(null);
 
-			if (isUndefined(_pageNodeRef.positions)) {
+			if (_pageNodeRef.positions === undefined) {
 				throw new Error('Page reference id not found');
 			}
 
@@ -288,14 +287,13 @@ class Renderer {
 
 		this.pdfDocument.save();
 
-		let angle = Math.atan2(this.pdfDocument.page.height, this.pdfDocument.page.width) * -180 / Math.PI;
-		this.pdfDocument.rotate(angle, { origin: [this.pdfDocument.page.width / 2, this.pdfDocument.page.height / 2] });
+		this.pdfDocument.rotate(watermark.angle, { origin: [this.pdfDocument.page.width / 2, this.pdfDocument.page.height / 2] });
 
-		let x = this.pdfDocument.page.width / 2 - watermark.size.size.width / 2;
-		let y = this.pdfDocument.page.height / 2 - watermark.size.size.height / 4;
+		let x = this.pdfDocument.page.width / 2 - watermark._size.size.width / 2;
+		let y = this.pdfDocument.page.height / 2 - watermark._size.size.height / 2;
 
 		this.pdfDocument._font = watermark.font;
-		this.pdfDocument.fontSize(watermark.size.fontSize);
+		this.pdfDocument.fontSize(watermark.fontSize);
 		this.pdfDocument.text(watermark.text, x, y, { lineBreak: false });
 
 		this.pdfDocument.restore();
